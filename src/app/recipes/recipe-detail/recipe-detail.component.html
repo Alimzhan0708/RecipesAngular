@@ -11,11 +11,15 @@
 <div class="row">
   <div class="col-xs-12">
     <div class="btn-group" appDropdown>
-      <button type="button" class="btn btn-primary dropdown-togglle">Manage Recipe <span class="caret"></span></button>
+      <button
+        type="button"
+        class="btn btn-primary dropdown-toggle">
+        Manage Recipe <span class="caret"></span>
+      </button>
       <ul class="dropdown-menu">
-        <li (click)="onAddToShoppingList()"><a>Shopping List</a></li>
-        <li (click)="onEditRecipe()"><a>Edit List</a></li>
-        <li class="" (click)="onDeleteRecipe()"><a>Delete</a></li>
+        <li><a (click)="onAddToShoppingList()">Shopping List</a></li>
+        <li><a (click)="onEditRecipe()">Edit List</a></li>
+        <li><a (click)="onDeleteRecipe()">Delete</a></li>
       </ul>
     </div>
   </div>

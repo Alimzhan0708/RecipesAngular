@@ -4,6 +4,7 @@ import { catchError, tap } from "rxjs/operators";
 import { BehaviorSubject, throwError} from 'rxjs';
 import { User } from "./user.model";
 import { Router } from "@angular/router";
+import { environment } from "src/environments/environment.prod";
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,7 @@ import { Router } from "@angular/router";
 
 export class AuthService {
   userSubject = new BehaviorSubject<User>(null);
+  key: string = environment.apiKey;
   private tokenExpirationTimer: any;
 
   constructor(
@@ -20,7 +22,7 @@ export class AuthService {
 
   signup(email: string, password: string) {
     return this.http.post<AuthResponseData>(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyD7ZElZmIbY3UGPekp-PHcuG2KO7Ka7KTo',
+      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='+ this.key,
       {email: email, password: password, returnSecureToken: true }
       ).pipe(tap(resData => {
         this.handleAuth(resData.email, resData.localId, resData.idToken, +resData.expiresIn);
@@ -29,7 +31,7 @@ export class AuthService {
   }
 
   login(email: string, password: string){
-    return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyD7ZElZmIbY3UGPekp-PHcuG2KO7Ka7KTo',
+    return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='+ this.key,
     {email: email, password: password, returnSecureToken: true }
     ).pipe(tap(resData => {
       this.handleAuth(resData.email, resData.localId, resData.idToken, +resData.expiresIn);
@@ -65,7 +67,7 @@ export class AuthService {
   }
 
   private handleAuth(email: string, userId: string, token: string, expiresIn: number) {
-    const expirationDate = new Date(new Date().getTime() + +expiresIn*1000);
+        const expirationDate = new Date(new Date().getTime() + +expiresIn*1000);
         const user = new User(email, userId, token, expirationDate);
         this.userSubject.next(user);
         this.autoLogout(expiresIn * 1000);
